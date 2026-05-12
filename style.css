@@ -95,11 +95,11 @@ body {
   will-change: opacity;
 }
 
-/* Fundido inferior para que el contenido sea legible */
+/* Fundido inferior suave */
 .hero::after {
   content: '';
   position: absolute; inset: 0;
-  background: linear-gradient(to bottom, rgba(3,7,16,0.35) 0%, transparent 18%, transparent 60%, rgba(3,7,16,0.92) 100%);
+  background: linear-gradient(to bottom, rgba(3,7,16,0.35) 0%, transparent 18%, transparent 55%, rgba(3,7,16,0.55) 100%);
   pointer-events: none;
 }
 
@@ -1001,14 +1001,16 @@ body {
 }
 
 .card-role {
-  background: rgba(255,255,255,0.06);
-  border: 1.5px solid rgba(255,255,255,0.12);
+  background: rgba(14,22,42,0.82);
+  border: 1.5px solid rgba(255,255,255,0.18);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   backdrop-filter: blur(10px);
   transition: transform 0.2s cubic-bezier(.34,1.56,.64,1), box-shadow 0.2s, border-color 0.2s, background 0.2s;
 }
-.card-role:hover { background: rgba(255,255,255,0.11); }
+.card-role:hover { background: rgba(20,32,58,0.92); }
 .card-role .card-icon, .card-role h2 { color: var(--white); }
-.card-role p { color: var(--text-3); }
+.card-role p { color: #A8BAD8; }
 
 .arbitro-card:hover  { border-color: var(--orange); box-shadow: 0 8px 32px rgba(240,112,32,0.25); }
 .oficial-card:hover  { border-color: #38BDF8;        box-shadow: 0 8px 32px rgba(56,189,248,0.2); }
