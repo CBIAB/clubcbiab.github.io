@@ -1,0 +1,731 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Club del Árbitro CBiAB</title>
+  <!-- PWA -->
+  <link rel="manifest" href="manifest.json" />
+  <meta name="theme-color" content="#0F172A" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="Club Árbitro" />
+  <link rel="apple-touch-icon" href="logo.png" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+
+<!-- ========== PANTALLA: INICIO ========== -->
+<div id="screen-home" class="screen active">
+  <div class="hero">
+    <div class="logo-area">
+      <img id="logo-img" src="logo.png" alt="CBiAB" class="logo-img" onerror="this.style.display='none'; document.getElementById('logo-fallback').style.display='block'" />
+      <div id="logo-fallback" class="logo-icon" style="display:none">🏀</div>
+      <h1>Club <span class="brand-cbiab">CBiAB</span></h1>
+      <p class="subtitle">Comité Vizcaíno de Árbitros de Baloncesto</p>
+    </div>
+
+    <!-- Fase 1: Selección de rol -->
+    <div id="home-phase-1">
+      <p class="role-select-label">¿Cuál es tu rol?</p>
+      <div class="home-cards">
+        <div class="card card-role arbitro-card" onclick="selectRole('arbitro')">
+          <div class="card-icon">🏀</div>
+          <h2>Árbitro</h2>
+          <p>Test y formación para árbitros CBiAB</p>
+        </div>
+        <div class="card card-role oficial-card" onclick="selectRole('oficial')">
+          <div class="card-icon">📋</div>
+          <h2>Oficial de Mesa</h2>
+          <p>Test y formación para oficiales CBiAB</p>
+        </div>
+      </div>
+    </div>
+
+    <!-- Fase 2: Acciones (oculta hasta seleccionar rol) -->
+    <div id="home-phase-2" class="hidden">
+      <div id="home-role-indicator" class="home-role-indicator"></div>
+      <div class="home-cards">
+        <div class="card card-primary" onclick="showScreen('screen-login')">
+          <div class="card-icon">👤</div>
+          <h2>Acceder con cuenta</h2>
+          <p>Guarda tu historial y sigue tu progreso</p>
+        </div>
+        <div class="card card-secondary" onclick="startAnonymousTest()">
+          <div class="card-icon">⚡</div>
+          <h2>Test anónimo</h2>
+          <p>Haz un test sin registrarte</p>
+        </div>
+      </div>
+      <p class="home-footer">¿No tienes cuenta? <a href="#" onclick="showScreen('screen-register')">Regístrate gratis</a></p>
+      <p class="home-footer" style="margin-top:10px"><a href="#" onclick="changeRole()" style="color:var(--text-3);font-size:0.82rem;font-weight:500">← Cambiar rol</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PANTALLA: PENDIENTE ========== -->
+<div id="screen-pendiente" class="screen">
+  <div class="auth-container">
+    <div class="auth-box">
+      <div style="font-size:56px;margin-bottom:16px">⏳</div>
+      <h2>Solicitud enviada</h2>
+      <p style="color:var(--text-2);font-size:0.95rem;line-height:1.6;margin-bottom:24px">
+        Tu registro está <strong>pendiente de aprobación</strong> por el administrador del CBiAB.<br><br>
+        Cuando sea aprobado podrás acceder con tu usuario y contraseña.
+      </p>
+      <button class="btn-secondary full" onclick="showScreen('screen-home')">Volver al inicio</button>
+      <div style="margin-top:16px;padding-top:16px;border-top:1px solid var(--border)">
+        <p style="font-size:0.82rem;color:var(--text-3)">¿Quieres practicar mientras tanto?</p>
+        <button class="btn-primary full" style="margin-top:8px" onclick="startAnonymousTest()">Hacer test anónimo</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PANTALLA: LOGIN ========== -->
+<div id="screen-login" class="screen">
+  <div class="auth-container">
+    <button class="btn-back" onclick="showScreen('screen-home')">← Volver</button>
+    <div class="auth-box">
+      <img src="logo.png" alt="CBiAB" class="logo-img small" onerror="this.style.display='none'" />
+      <h2>Iniciar sesión</h2>
+      <div class="form-group">
+        <label>Nombre de usuario</label>
+        <input type="text" id="login-user" placeholder="Tu nombre de usuario" />
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="login-pass" placeholder="Tu contraseña" />
+      </div>
+      <div id="login-error" class="error-msg hidden"></div>
+      <button id="btn-login" class="btn-primary full" onclick="doLogin()">Entrar</button>
+      <p class="auth-link">¿No tienes cuenta? <a href="#" onclick="showScreen('screen-register')">Regístrate</a></p>
+      <p class="auth-link" style="margin-top:8px">¿Olvidaste tu contraseña? <a href="#" onclick="showScreen('screen-forgot')">Recupérala</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PANTALLA: RECUPERAR CONTRASEÑA ========== -->
+<div id="screen-forgot" class="screen">
+  <div class="auth-container">
+    <button class="btn-back" onclick="showScreen('screen-login')">← Volver</button>
+    <div class="auth-box">
+      <div style="font-size:48px;margin-bottom:12px">🔑</div>
+      <h2>Recuperar contraseña</h2>
+      <p style="color:var(--text-2);font-size:0.88rem;margin-bottom:24px;line-height:1.5">
+        Introduce tu nombre de usuario y el administrador del CBiAB te asignará una nueva contraseña en breve.
+      </p>
+      <div class="form-group">
+        <label>Nombre de usuario</label>
+        <input type="text" id="forgot-user" placeholder="Tu nombre de usuario" />
+      </div>
+      <div id="forgot-msg" class="hidden" style="margin-bottom:14px"></div>
+      <button id="btn-forgot" class="btn-primary full" onclick="solicitarRecuperacion()">Enviar solicitud</button>
+      <p class="auth-link">¿Recuerdas tu contraseña? <a href="#" onclick="showScreen('screen-login')">Inicia sesión</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PANTALLA: REGISTRO ========== -->
+<div id="screen-register" class="screen">
+  <div class="auth-container">
+    <button class="btn-back" onclick="showScreen('screen-home')">← Volver</button>
+    <div class="auth-box">
+      <img src="logo.png" alt="CBiAB" class="logo-img small" onerror="this.style.display='none'" />
+      <h2>Crear cuenta</h2>
+      <div class="form-group">
+        <label>Soy…</label>
+        <div class="reg-tipo-selector">
+          <label class="reg-tipo-option">
+            <input type="radio" name="reg-tipo" value="arbitro" checked />
+            <span>🏀 Árbitro</span>
+          </label>
+          <label class="reg-tipo-option">
+            <input type="radio" name="reg-tipo" value="oficial" />
+            <span>📋 Oficial de Mesa</span>
+          </label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label>Nombre completo</label>
+        <input type="text" id="reg-name" placeholder="Tu nombre y apellidos" />
+      </div>
+      <div class="form-group">
+        <label>Nombre de usuario</label>
+        <input type="text" id="reg-user" placeholder="Elige un nombre de usuario" />
+      </div>
+      <div class="form-group">
+        <label>Contraseña</label>
+        <input type="password" id="reg-pass" placeholder="Mínimo 6 caracteres" />
+      </div>
+      <div class="consent-group">
+        <label class="consent-label">
+          <input type="checkbox" id="reg-consent" />
+          <span>He leído y acepto la <a href="#" onclick="showPrivacyModal(); return false;">Política de Privacidad</a> y el tratamiento de mis datos personales por parte del <strong>CBiAB</strong> para la gestión del Club del Árbitro.</span>
+        </label>
+      </div>
+      <div id="reg-error" class="error-msg hidden"></div>
+      <button id="btn-register" class="btn-primary full" onclick="doRegister()">Crear cuenta</button>
+      <p class="auth-link">¿Ya tienes cuenta? <a href="#" onclick="showScreen('screen-login')">Inicia sesión</a></p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PANTALLA: PANEL ÁRBITRO ========== -->
+<div id="screen-dashboard" class="screen">
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <img src="logo.png" alt="CBiAB" class="logo-topbar" onerror="this.style.display='none'" />
+      <span class="app-name">Club del Árbitro CBiAB</span>
+    </div>
+    <div class="top-bar-right">
+      <button class="btn-nav" onclick="openPerfil()">👤 Mi perfil</button>
+      <span id="dash-username" class="username-badge"></span>
+      <button class="btn-logout" onclick="doLogout()">Salir</button>
+    </div>
+  </header>
+  <div class="dashboard-content">
+    <!-- Banner recordatorio día 25 -->
+    <div id="banner-recordatorio" class="banner-recordatorio hidden">
+      ⚠️ <strong>¡Atención!</strong> Estamos a día <span id="banner-dia"></span> del mes y aún no has realizado el <strong>test mensual</strong>. Vence a fin de mes.
+      <button class="banner-btn" onclick="startTest('mensual')">Hacer test ahora →</button>
+    </div>
+    <div class="page-header">
+      <h2>Bienvenido, <span id="dash-name"></span> 👋</h2>
+      <p>Aquí tienes tu actividad y acceso a los tests &nbsp;<span id="dash-role-badge"></span></p>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-avg">—</div>
+        <div class="stat-label">Media mensuales</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-best">—</div>
+        <div class="stat-label">Mejor mensual</div>
+      </div>
+      <div class="stat-card" style="display:none">
+        <div class="stat-num" id="stat-total">0</div>
+      </div>
+    </div>
+
+    <div class="section-title">Test mensual obligatorio</div>
+    <div class="aprobado-info">📋 Mínimo para aprobar: <strong>20 de 25 aciertos</strong></div>
+    <div class="test-options">
+      <div id="card-mensual" class="card card-action card-mensual" onclick="startTest('mensual')">
+        <div class="card-icon" id="mensual-icon">📅</div>
+        <h3 id="mensual-titulo">Realizar test mensual</h3>
+        <p id="mensual-desc">25 preguntas aleatorias · Nota oficial registrada</p>
+        <div id="mensual-extra" class="hidden"></div>
+      </div>
+    </div>
+
+    <div class="section-title">Práctica de test</div>
+    <div class="test-options">
+      <div class="card card-action card-practica" onclick="startTest('practica')">
+        <div class="card-icon">🎯</div>
+        <h3>Test de práctica</h3>
+        <p>25 preguntas aleatorias · Para entrenar el reglamento</p>
+      </div>
+      <div class="card card-action card-errores" onclick="startTestErrores()">
+        <div class="card-icon">🔁</div>
+        <h3>Test de errores habituales</h3>
+        <p>Solo tus preguntas falladas · Refuerza tus puntos débiles</p>
+      </div>
+    </div>
+
+    <div class="stats-row" style="margin-top:8px">
+      <div class="stat-card">
+        <div class="stat-num" id="stat-mensual">0</div>
+        <div class="stat-label">Tests mensuales</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="stat-practica">0</div>
+        <div class="stat-label">Tests de práctica</div>
+      </div>
+    </div>
+
+    <div class="section-title">Historial</div>
+    <div class="history-tabs">
+      <button class="htab active" id="htab-todos" onclick="switchHistoryTab('todos')">Todos</button>
+      <button class="htab" id="htab-mensual" onclick="switchHistoryTab('mensual')">Mensuales</button>
+      <button class="htab" id="htab-practica" onclick="switchHistoryTab('practica')">Práctica</button>
+    </div>
+    <div id="history-list" class="history-list">
+      <p class="empty-msg">Todavía no has hecho ningún test.</p>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PANTALLA: ADMIN ========== -->
+<div id="screen-admin" class="screen">
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <img src="logo.png" alt="CBiAB" class="logo-topbar" onerror="this.style.display='none'" />
+      <span class="app-name">Club del Árbitro CBiAB</span>
+    </div>
+    <div class="top-bar-right">
+      <span class="username-badge admin-badge">⚙️ Administrador</span>
+      <button class="btn-nav" onclick="openRanking()">🏅 Ranking</button>
+      <button class="btn-logout" onclick="doLogout()">Salir</button>
+    </div>
+  </header>
+  <div class="dashboard-content">
+    <div class="page-header">
+      <h2>Panel de Administrador <span id="admin-tipo-badge"></span> <span id="admin-pendientes-badge-titulo" class="pendientes-badge-titulo hidden"></span></h2>
+      <p>Seguimiento de todos los árbitros registrados</p>
+    </div>
+
+    <!-- Control test mensual -->
+    <div class="admin-control-mensual">
+      <div class="control-mensual-info">
+        <div class="control-mensual-title">📅 Test mensual</div>
+        <div id="control-mensual-estado" class="control-mensual-estado"></div>
+      </div>
+      <label class="toggle-switch">
+        <input type="checkbox" id="toggle-mensual" onchange="toggleTestMensual()" />
+        <span class="toggle-slider"></span>
+      </label>
+    </div>
+
+    <!-- Árbitros inactivos -->
+    <div id="admin-inactivos-section" class="hidden">
+      <div class="inactivos-alert">
+        ⚠️ <strong id="admin-inactivos-count">0</strong> árbitros llevan más de 2 meses sin hacer el test mensual
+        <button class="btn-ver" style="margin-left:12px" onclick="toggleInactivosList()">Ver</button>
+      </div>
+      <div id="admin-inactivos-lista" class="hidden admin-estado-list" style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);margin-top:8px;margin-bottom:16px"></div>
+    </div>
+
+    <!-- Solicitudes pendientes -->
+    <div id="admin-pendientes-section" class="hidden">
+      <div class="pendientes-alert">
+        <span>🔔 Hay <strong id="admin-pendientes-count">0</strong> solicitudes de registro pendientes de aprobación</span>
+      </div>
+      <div id="admin-pendientes-lista" class="admin-estado-list" style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);margin-bottom:24px"></div>
+    </div>
+
+    <!-- Solicitudes contraseña olvidada -->
+    <div id="admin-forgot-section" class="hidden">
+      <div class="solicitudes-alert">
+        <span>🔑 Hay <strong id="admin-forgot-count">0</strong> solicitudes de recuperación de contraseña pendientes</span>
+        <button class="btn-ver" style="margin-left:12px" onclick="toggleForgotList()">Ver</button>
+      </div>
+      <div id="admin-forgot-lista" class="hidden admin-estado-list" style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);margin-top:8px;margin-bottom:16px"></div>
+    </div>
+
+    <!-- Reportes de preguntas -->
+    <div id="admin-reportes-section" class="hidden">
+      <div class="reportes-alert">
+        <span>⚠️ Hay <strong id="admin-reportes-count">0</strong> reportes de preguntas pendientes de revisión</span>
+        <button class="btn-ver" style="margin-left:12px" onclick="toggleReportesList()">Ver</button>
+      </div>
+      <div id="admin-reportes-lista" class="hidden admin-estado-list" style="background:var(--white);border:1px solid var(--border);border-radius:var(--radius);margin-top:8px;margin-bottom:16px"></div>
+    </div>
+
+    <!-- Stats globales -->
+    <div class="stats-row">
+      <div class="stat-card">
+        <div class="stat-num" id="admin-stat-arbitros">0</div>
+        <div class="stat-label">Árbitros activos</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num nota-alta" id="admin-stat-completado">0</div>
+        <div class="stat-label">Han hecho el test ✅</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num nota-baja" id="admin-stat-pendiente">0</div>
+        <div class="stat-label">Sin test este mes ❌</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num nota-alta" id="admin-stat-aprobados">—</div>
+        <div class="stat-label">Aprobados este mes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num nota-baja" id="admin-stat-suspensos">—</div>
+        <div class="stat-label">Suspensos este mes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="admin-stat-avg">—</div>
+        <div class="stat-label">Media del comité</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num nota-alta" id="admin-stat-mejor">—</div>
+        <div class="stat-label">Mejor nota del mes</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num" id="admin-stat-practica">0</div>
+        <div class="stat-label">Tests de práctica</div>
+      </div>
+    </div>
+
+    <!-- Estado test mensual -->
+    <div class="section-title">Estado del test mensual — <span id="admin-mes-label"></span></div>
+    <div class="admin-estado-grid">
+      <div class="admin-estado-col">
+        <div class="admin-estado-header completados-header">✅ Han completado el test</div>
+        <div id="admin-completados" class="admin-estado-list"></div>
+      </div>
+      <div class="admin-estado-col">
+        <div class="admin-estado-header pendientes-header">❌ Pendientes de realizar</div>
+        <div id="admin-pendientes" class="admin-estado-list"></div>
+      </div>
+    </div>
+
+    <!-- Tabla árbitros -->
+    <div class="admin-table-header">
+      <div class="section-title" style="margin:0">Todos los árbitros</div>
+      <div class="admin-actions">
+        <input type="text" id="admin-search" placeholder="🔍 Buscar árbitro..." oninput="renderAdminTable()" class="admin-search-input" />
+        <button class="btn-export" onclick="exportToExcel()">⬇️ Exportar Excel</button>
+      </div>
+    </div>
+    <div id="admin-table-container"></div>
+
+    <!-- Detalle de un árbitro -->
+    <div id="admin-detail" class="hidden">
+      <div class="admin-detail-header">
+        <button class="btn-back-inline" onclick="closeAdminDetail()">← Volver a la lista</button>
+        <h3 id="admin-detail-name"></h3>
+      </div>
+      <!-- Perfil completo del árbitro -->
+      <div id="admin-detail-perfil" class="admin-perfil-card"></div>
+
+      <div class="section-title" style="margin-top:24px">Estadísticas</div>
+      <div class="stats-row" id="admin-detail-stats"></div>
+      <div class="section-title">Evolución de notas mensuales</div>
+      <div class="chart-container" style="margin-bottom:24px">
+        <canvas id="chart-admin"></canvas>
+      </div>
+
+      <div class="section-title">Historial completo</div>
+      <div id="admin-detail-history" class="history-list"></div>
+
+      <div class="section-title" style="margin-top:24px;color:var(--red)">Zona peligrosa</div>
+      <div style="background:#FEF2F2;border:1.5px solid #FECACA;border-radius:var(--radius);padding:18px 20px;margin-bottom:16px">
+        <p style="font-size:0.88rem;color:#991B1B;margin-bottom:14px;font-weight:500">Eliminar esta cuenta borrará permanentemente todos sus datos e historial de tests. Esta acción no se puede deshacer.</p>
+        <button class="btn-eliminar" onclick="eliminarArbitro()">🗑️ Eliminar cuenta del árbitro</button>
+      </div>
+
+      <div class="section-title">Resetear contraseña</div>
+      <div class="reset-pass-row">
+        <input type="text" id="admin-new-pass" class="admin-search-input" placeholder="Nueva contraseña para el árbitro" style="max-width:280px" />
+        <button class="btn-export" onclick="adminResetPassword()">🔑 Resetear</button>
+      </div>
+      <div id="admin-reset-msg" class="hidden" style="margin-top:8px;font-size:0.85rem;font-weight:600"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PANTALLA: RANKING ========== -->
+<div id="screen-ranking" class="screen">
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <img src="logo.png" alt="CBiAB" class="logo-topbar" onerror="this.style.display='none'" />
+      <span class="app-name">Club del Árbitro CBiAB</span>
+    </div>
+    <div class="top-bar-right">
+      <button class="btn-nav" onclick="backToDashboard()">← Volver</button>
+      <button class="btn-logout" onclick="doLogout()">Salir</button>
+    </div>
+  </header>
+  <div class="dashboard-content">
+    <div class="page-header">
+      <h2>🏅 Ranking</h2>
+      <p>Clasificación de árbitros por tests mensuales</p>
+    </div>
+
+    <div class="ranking-tabs">
+      <button class="htab active" id="rtab-mes" onclick="switchRankingTab('mes')">Este mes</button>
+      <button class="htab" id="rtab-historico" onclick="switchRankingTab('historico')">Histórico</button>
+    </div>
+
+    <div id="ranking-mes-label" class="ranking-period-label"></div>
+
+    <div id="ranking-podio" class="ranking-podio"></div>
+    <div id="ranking-lista" class="ranking-lista"></div>
+  </div>
+</div>
+
+<!-- ========== PANTALLA: PERFIL ========== -->
+<div id="screen-perfil" class="screen">
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <img src="logo.png" alt="CBiAB" class="logo-topbar" onerror="this.style.display='none'" />
+      <span class="app-name">Club del Árbitro CBiAB</span>
+    </div>
+    <div class="top-bar-right">
+      <button id="perfil-btn-volver" class="btn-nav" onclick="backToDashboard()">← Volver</button>
+      <button class="btn-logout" onclick="doLogout()">Salir</button>
+    </div>
+  </header>
+  <div class="dashboard-content">
+    <!-- Banner perfil obligatorio -->
+    <div id="perfil-obligatorio-banner" class="perfil-obligatorio-banner hidden">
+      🔒 <strong>Completa tu perfil antes de continuar</strong>
+      <p>Rellena todos los campos marcados con * para acceder a los tests.</p>
+    </div>
+    <div class="page-header">
+      <h2>👤 Mi perfil</h2>
+      <p>Gestiona tu información personal</p>
+    </div>
+
+    <div class="perfil-grid">
+      <!-- Datos personales -->
+      <div class="perfil-card">
+        <h3 class="perfil-section-title">Datos personales</h3>
+        <div class="form-group">
+          <label>Nombre completo</label>
+          <input type="text" id="perfil-nombre" class="perfil-input" readonly />
+        </div>
+        <div class="form-group">
+          <label>Usuario</label>
+          <input type="text" id="perfil-username" class="perfil-input" readonly />
+        </div>
+        <div class="form-group">
+          <label>Teléfono <span class="campo-req">*</span></label>
+          <input type="tel" id="perfil-telefono" class="perfil-input" placeholder="Ej: 600 000 000" />
+        </div>
+        <div class="form-group">
+          <label>Email <span class="campo-req">*</span></label>
+          <input type="email" id="perfil-email" class="perfil-input" placeholder="tu@email.com" />
+        </div>
+        <div class="form-group">
+          <label>Categoría arbitral <span class="campo-req">*</span></label>
+          <select id="perfil-categoria" class="perfil-input">
+            <option value="">Selecciona categoría</option>
+            <option value="Eskola Laguntzaile">Eskola Laguntzaile</option>
+            <option value="G6 (comité vizcaíno)">G6 (comité vizcaíno)</option>
+            <option value="G5 (comité vasco)">G5 (comité vasco)</option>
+            <option value="G4 (comité vasco)">G4 (comité vasco)</option>
+            <option value="G3 FEB">G3 FEB</option>
+            <option value="G2 FEB">G2 FEB</option>
+            <option value="G1 FEB">G1 FEB</option>
+          </select>
+        </div>
+        <p class="campos-obligatorios"><span class="campo-req">*</span> Campos obligatorios</p>
+        <div id="perfil-msg" class="hidden" style="margin-bottom:12px"></div>
+        <button class="btn-primary full" onclick="savePerfil()">Guardar cambios</button>
+      </div>
+
+      <!-- Cambiar contraseña -->
+      <div class="perfil-card">
+        <h3 class="perfil-section-title">Cambiar contraseña</h3>
+        <div class="form-group">
+          <label>Contraseña actual</label>
+          <input type="password" id="pass-actual" class="perfil-input" placeholder="Tu contraseña actual" />
+        </div>
+        <div class="form-group">
+          <label>Nueva contraseña</label>
+          <input type="password" id="pass-nueva" class="perfil-input" placeholder="Mínimo 4 caracteres" />
+        </div>
+        <div class="form-group">
+          <label>Confirmar nueva contraseña</label>
+          <input type="password" id="pass-confirmar" class="perfil-input" placeholder="Repite la nueva contraseña" />
+        </div>
+        <div id="pass-msg" class="hidden" style="margin-bottom:12px"></div>
+        <button class="btn-primary full" onclick="changePassword()">Cambiar contraseña</button>
+
+        <!-- Estadísticas rápidas -->
+        <h3 class="perfil-section-title" style="margin-top:28px">Mis estadísticas</h3>
+        <div class="stats-row" id="perfil-stats" style="margin-bottom:0"></div>
+
+        <!-- Mini gráfico evolución -->
+        <div style="margin-top:20px">
+          <div class="section-title" style="margin-top:0">Evolución de notas mensuales</div>
+          <div class="chart-container">
+            <canvas id="chart-perfil"></canvas>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ========== PANTALLA: TEST ========== -->
+<div id="screen-test" class="screen">
+  <header class="top-bar">
+    <div class="top-bar-left">
+      <button class="btn-back-white" onclick="confirmExitTest()">← Salir</button>
+    </div>
+    <div class="top-bar-center">
+      <span id="test-title">Test de Reglamento</span>
+    </div>
+    <div class="top-bar-right">
+      <span id="test-progress-label" class="progress-label"></span>
+      <div id="test-timer" class="test-timer">35:00</div>
+    </div>
+  </header>
+  <div class="test-content">
+    <div class="progress-bar-outer">
+      <div id="progress-bar-inner" class="progress-bar-inner"></div>
+    </div>
+    <div id="test-question-area">
+      <div class="question-meta">
+        <span id="q-articulo" class="badge-articulo"></span>
+        <span id="q-numero" class="badge-numero"></span>
+      </div>
+      <div id="q-texto" class="question-text"></div>
+      <div id="q-opciones" class="options-list"></div>
+      <div id="q-feedback" class="feedback hidden"></div>
+      <div id="test-report-area" class="test-report-area" style="display:none">
+        <button class="btn-reportar" onclick="openReportModal()">⚠️ Reportar pregunta</button>
+      </div>
+      <div class="test-nav-buttons">
+        <button id="btn-anterior" class="btn-nav-test" onclick="prevQuestion()">← Anterior</button>
+        <button id="btn-siguiente" class="btn-nav-test" onclick="nextQuestion()">Siguiente →</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Barra de navegación inferior fija -->
+  <div class="test-nav-bar">
+    <div class="nav-bar-top">
+      <span id="nav-bar-count" class="nav-bar-count"></span>
+      <button class="btn-finalizar-test" onclick="finishTest()">✅ Finalizar test</button>
+    </div>
+    <div id="test-nav-circles" class="test-nav-circles"></div>
+  </div>
+</div>
+
+<!-- ========== PANTALLA: RESULTADO ========== -->
+<div id="screen-result" class="screen">
+  <div class="result-container">
+    <div id="result-emoji" class="result-emoji"></div>
+    <h2 id="result-title"></h2>
+    <div id="result-aprobado-badge" class="result-aprobado-badge hidden"></div>
+    <div id="result-score" class="result-score"></div>
+    <div id="result-nota" class="result-nota"></div>
+    <div class="result-actions">
+      <button class="btn-primary" onclick="reviewErrors()">Repasar errores</button>
+      <button class="btn-secondary" onclick="afterResult()">Volver al inicio</button>
+    </div>
+
+    <div id="review-section" class="hidden">
+      <h3 class="review-title">Preguntas falladas</h3>
+      <div id="review-list"></div>
+    </div>
+  </div>
+</div>
+
+<!-- Pantalla de carga -->
+<div id="screen-loading" class="screen active">
+  <div class="loading-center">
+    <img src="logo.png" alt="CBiAB" class="logo-img" onerror="this.style.display='none'" />
+    <div class="spinner"></div>
+    <p>Cargando...</p>
+  </div>
+</div>
+
+<!-- ========== MODAL: REVISIÓN DE TEST ========== -->
+<div id="modal-overlay" class="modal-overlay hidden" onclick="closeModal()"></div>
+<div id="modal-test" class="modal-test hidden">
+  <div class="modal-header">
+    <div>
+      <div class="modal-title" id="modal-titulo"></div>
+      <div class="modal-sub" id="modal-sub"></div>
+    </div>
+    <button class="modal-close" onclick="closeModal()">✕</button>
+  </div>
+  <div class="modal-comentario-section">
+    <label class="modal-label">💬 Comentario del administrador</label>
+    <textarea id="modal-comentario" class="modal-textarea" placeholder="Escribe aquí tu valoración o feedback para el árbitro..."></textarea>
+    <button class="btn-primary" style="margin-top:10px" onclick="saveAdminComment()">Guardar comentario</button>
+    <span id="modal-comment-msg" class="hidden" style="margin-left:12px;font-size:0.82rem;font-weight:700;color:var(--green)">✅ Guardado</span>
+  </div>
+  <div class="modal-body" id="modal-body"></div>
+</div>
+
+<!-- ========== MODAL: POLÍTICA DE PRIVACIDAD ========== -->
+<div id="privacy-overlay" class="modal-overlay hidden" onclick="closePrivacyModal()"></div>
+<div id="privacy-modal" class="modal-test hidden" style="max-height:85vh;overflow-y:auto;">
+  <div class="modal-header">
+    <div>
+      <div class="modal-title">🔒 Política de Privacidad</div>
+      <div class="modal-sub">Club del Árbitro CBiAB — Comité Vizcaíno de Árbitros de Baloncesto</div>
+    </div>
+    <button class="modal-close" onclick="closePrivacyModal()">✕</button>
+  </div>
+  <div class="modal-body" style="padding:24px;line-height:1.7;font-size:0.88rem;color:var(--text);">
+
+    <h3 style="margin:0 0 8px;font-size:1rem;color:var(--navy)">1. Responsable del tratamiento</h3>
+    <p><strong>Comité Vizcaíno de Árbitros de Baloncesto (CBiAB)</strong><br>
+    Correo de contacto: <a href="mailto:tecnicoscviab.arbitros@gmail.com">tecnicoscviab.arbitros@gmail.com</a></p>
+
+    <h3 style="margin:16px 0 8px;font-size:1rem;color:var(--navy)">2. Finalidad del tratamiento</h3>
+    <p>Los datos personales recogidos (nombre, nombre de usuario y contraseña) se utilizan exclusivamente para:</p>
+    <ul style="padding-left:20px;margin:6px 0;">
+      <li>Gestionar el acceso a la plataforma de formación arbitral.</li>
+      <li>Registrar y hacer seguimiento de los resultados de los tests.</li>
+      <li>Comunicaciones internas del comité relacionadas con la actividad arbitral.</li>
+    </ul>
+
+    <h3 style="margin:16px 0 8px;font-size:1rem;color:var(--navy)">3. Base jurídica</h3>
+    <p>El tratamiento se fundamenta en el <strong>consentimiento expreso</strong> del interesado (Art. 6.1.a del RGPD), otorgado mediante la aceptación de esta política en el momento del registro.</p>
+
+    <h3 style="margin:16px 0 8px;font-size:1rem;color:var(--navy)">4. Destinatarios y transferencias internacionales</h3>
+    <p>Los datos se almacenan en <strong>Supabase</strong> (servidores en la Unión Europea — Irlanda), proveedor que cumple con el RGPD. No se ceden datos a terceros salvo obligación legal.</p>
+
+    <h3 style="margin:16px 0 8px;font-size:1rem;color:var(--navy)">5. Plazo de conservación</h3>
+    <p>Los datos se conservarán mientras el árbitro permanezca activo en el club. Una vez dada de baja la cuenta, los datos serán eliminados permanentemente.</p>
+
+    <h3 style="margin:16px 0 8px;font-size:1rem;color:var(--navy)">6. Seguridad</h3>
+    <p>Las contraseñas se almacenan <strong>cifradas mediante SHA-256</strong>. Ningún administrador ni tercero puede ver tu contraseña en texto legible.</p>
+
+    <h3 style="margin:16px 0 8px;font-size:1rem;color:var(--navy)">7. Tus derechos (RGPD)</h3>
+    <p>Puedes ejercer en cualquier momento los siguientes derechos dirigiéndote a <a href="mailto:tecnicoscviab.arbitros@gmail.com">tecnicoscviab.arbitros@gmail.com</a>:</p>
+    <ul style="padding-left:20px;margin:6px 0;">
+      <li><strong>Acceso</strong> — saber qué datos tenemos sobre ti.</li>
+      <li><strong>Rectificación</strong> — corregir datos inexactos.</li>
+      <li><strong>Supresión</strong> — solicitar el borrado de tu cuenta y datos.</li>
+      <li><strong>Portabilidad</strong> — recibir tus datos en formato estructurado.</li>
+      <li><strong>Oposición / Limitación</strong> — restringir el tratamiento en ciertos casos.</li>
+    </ul>
+    <p style="margin-top:8px;">También tienes derecho a presentar una reclamación ante la <strong>Agencia Española de Protección de Datos (AEPD)</strong>: <a href="https://www.aepd.es" target="_blank">www.aepd.es</a></p>
+
+    <h3 style="margin:16px 0 8px;font-size:1rem;color:var(--navy)">8. Retirada del consentimiento</h3>
+    <p>Puedes retirar tu consentimiento en cualquier momento solicitando la eliminación de tu cuenta al administrador del comité, sin que ello afecte a la licitud del tratamiento previo.</p>
+
+    <p style="margin-top:20px;font-size:0.78rem;color:var(--text-3);border-top:1px solid var(--border);padding-top:12px;">
+      Última actualización: mayo de 2026. Esta política puede actualizarse. Los cambios relevantes se comunicarán a través de la plataforma.
+    </p>
+  </div>
+</div>
+
+<!-- ========== MODAL: REPORTAR PREGUNTA ========== -->
+<div id="report-overlay" class="modal-overlay hidden" onclick="closeReportModal()"></div>
+<div id="report-modal" class="modal-test hidden" style="max-width:500px">
+  <div class="modal-header">
+    <div>
+      <div class="modal-title">⚠️ Reportar pregunta</div>
+      <div class="modal-sub" id="report-modal-sub"></div>
+    </div>
+    <button class="modal-close" onclick="closeReportModal()">✕</button>
+  </div>
+  <div class="modal-body" style="padding:24px">
+    <p style="font-size:0.88rem;color:var(--text-2);margin-bottom:16px;line-height:1.5">
+      Describe el problema con esta pregunta (error en el enunciado, respuesta incorrecta, ambigüedad…). El administrador lo revisará lo antes posible.
+    </p>
+    <div class="form-group">
+      <label>Descripción del problema</label>
+      <textarea id="report-descripcion" class="modal-textarea" placeholder="Ej: Creo que la respuesta correcta es la B, hay un error tipográfico, la pregunta es ambigua..." style="min-height:100px;border-color:var(--border)"></textarea>
+    </div>
+    <div id="report-msg" class="hidden" style="margin-bottom:12px"></div>
+    <button class="btn-primary full" style="margin-top:4px" onclick="submitReport()">Enviar reporte</button>
+  </div>
+</div>
+
+<script src="proteccion.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="data.js"></script>
+<script src="data-oficiales.js"></script>
+<script src="app.js"></script>
+</body>
+</html>
