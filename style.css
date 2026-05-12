@@ -80,6 +80,7 @@ body {
 
 .logo-area { text-align: center; margin-bottom: 56px; position: relative; }
 .logo-img { width: 100px; height: 100px; object-fit: contain; filter: drop-shadow(0 8px 24px rgba(240,112,32,0.4)); margin-bottom: 20px; }
+.logo-img-hero { width: 135px; height: 135px; }
 .logo-img.small { width: 64px; height: 64px; margin-bottom: 12px; filter: none; }
 .logo-topbar { width: 32px; height: 32px; object-fit: contain; }
 

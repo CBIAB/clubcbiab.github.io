@@ -1,129 +1,160 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
   <defs>
+    <!-- Fondo -->
     <linearGradient id="bgMain" x1="0" y1="0" x2="1" y2="1">
-      <stop offset="0%" stop-color="#0A0F1E"/>
+      <stop offset="0%" stop-color="#0D1220"/>
       <stop offset="100%" stop-color="#04080F"/>
     </linearGradient>
-    <linearGradient id="slashOrange" x1="0" y1="1" x2="1" y2="0">
-      <stop offset="0%" stop-color="#F07020"/>
-      <stop offset="60%" stop-color="#FF8C42"/>
+    <!-- Balón: gradiente 3D -->
+    <radialGradient id="ballFill" cx="36%" cy="30%" r="65%">
+      <stop offset="0%"   stop-color="#FFA050"/>
+      <stop offset="35%"  stop-color="#F07020"/>
+      <stop offset="75%"  stop-color="#C45010"/>
+      <stop offset="100%" stop-color="#7A2A00"/>
+    </radialGradient>
+    <!-- Sombra del balón -->
+    <radialGradient id="ballShadow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#000" stop-opacity="0.5"/>
+      <stop offset="100%" stop-color="#000" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Halo naranja detrás del balón -->
+    <radialGradient id="ballHalo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#F07020" stop-opacity="0.35"/>
+      <stop offset="60%"  stop-color="#F07020" stop-opacity="0.1"/>
+      <stop offset="100%" stop-color="#F07020" stop-opacity="0"/>
+    </radialGradient>
+    <!-- Silbato dorado -->
+    <linearGradient id="whistleGold" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%"   stop-color="#FFE066"/>
+      <stop offset="40%"  stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#8B6914"/>
+    </linearGradient>
+    <linearGradient id="whistleGoldH" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#FFE066"/>
+      <stop offset="50%"  stop-color="#D4AF37"/>
+      <stop offset="100%" stop-color="#A07820"/>
+    </linearGradient>
+    <!-- Slash diagonal -->
+    <linearGradient id="slashGrad" x1="0" y1="1" x2="1" y2="0">
+      <stop offset="0%"   stop-color="#F07020"/>
       <stop offset="100%" stop-color="#F59E0B"/>
     </linearGradient>
-    <linearGradient id="slashBlue" x1="0" y1="0" x2="1" y2="1">
+    <!-- Acento azul -->
+    <linearGradient id="blueAccent" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#0EA5E9"/>
       <stop offset="100%" stop-color="#1E40AF"/>
     </linearGradient>
-    <radialGradient id="glowOrange" cx="75%" cy="20%" r="45%">
-      <stop offset="0%" stop-color="#F07020" stop-opacity="0.22"/>
-      <stop offset="100%" stop-color="#F07020" stop-opacity="0"/>
-    </radialGradient>
-    <radialGradient id="glowBlue" cx="15%" cy="80%" r="40%">
-      <stop offset="0%" stop-color="#0EA5E9" stop-opacity="0.18"/>
-      <stop offset="100%" stop-color="#0EA5E9" stop-opacity="0"/>
-    </radialGradient>
+    <!-- Fundidos -->
     <linearGradient id="fadeBottom" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="35%" stop-color="#080D18" stop-opacity="0"/>
+      <stop offset="30%" stop-color="#080D18" stop-opacity="0"/>
       <stop offset="100%" stop-color="#080D18" stop-opacity="0.97"/>
     </linearGradient>
     <linearGradient id="fadeTop" x1="0" y1="0" x2="0" y2="1">
-      <stop offset="0%" stop-color="#080D18" stop-opacity="0.5"/>
-      <stop offset="22%" stop-color="#080D18" stop-opacity="0"/>
+      <stop offset="0%"  stop-color="#080D18" stop-opacity="0.45"/>
+      <stop offset="20%" stop-color="#080D18" stop-opacity="0"/>
     </linearGradient>
-    <filter id="blur8">
-      <feGaussianBlur stdDeviation="8"/>
-    </filter>
-    <filter id="blur20">
-      <feGaussianBlur stdDeviation="20"/>
-    </filter>
+    <filter id="blur6">  <feGaussianBlur stdDeviation="6"/></filter>
+    <filter id="blur16"> <feGaussianBlur stdDeviation="16"/></filter>
+    <filter id="blur30"> <feGaussianBlur stdDeviation="30"/></filter>
   </defs>
 
-  <!-- ── FONDO BASE ── -->
+  <!-- ══ FONDO ══ -->
   <rect width="1200" height="800" fill="url(#bgMain)"/>
-  <rect width="1200" height="800" fill="url(#glowOrange)"/>
-  <rect width="1200" height="800" fill="url(#glowBlue)"/>
 
-  <!-- ── BANDA DIAGONAL PRINCIPAL (naranja) ── -->
-  <!-- Capa glow/blur detrás -->
-  <polygon points="180,800 460,800 1200,130 920,130" fill="url(#slashOrange)" opacity="0.18" filter="url(#blur20)"/>
-  <!-- Banda sólida -->
-  <polygon points="220,800 480,800 1200,170 940,170" fill="url(#slashOrange)" opacity="0.07"/>
-  <!-- Línea brillante del borde superior -->
-  <line x1="220" y1="800" x2="1200" y2="170" stroke="url(#slashOrange)" stroke-width="2.5" opacity="0.75"/>
-  <!-- Línea brillante glow -->
-  <line x1="220" y1="800" x2="1200" y2="170" stroke="#FF8C42" stroke-width="8" opacity="0.2" filter="url(#blur8)"/>
-  <!-- Línea paralela secundaria -->
-  <line x1="320" y1="800" x2="1200" y2="310" stroke="#F07020" stroke-width="1.2" opacity="0.3"/>
-  <line x1="100" y1="800" x2="1080" y2="170" stroke="#F59E0B" stroke-width="0.8" opacity="0.2"/>
+  <!-- ══ BANDA DIAGONAL NARANJA ══ -->
+  <polygon points="150,800 430,800 1200,150 920,150" fill="url(#slashGrad)" opacity="0.06"/>
+  <line x1="150" y1="800" x2="1200" y2="150" stroke="url(#slashGrad)" stroke-width="2" opacity="0.55"/>
+  <line x1="150" y1="800" x2="1200" y2="150" stroke="#FF8C42" stroke-width="10" opacity="0.15" filter="url(#blur6)"/>
+  <line x1="260" y1="800" x2="1200" y2="280" stroke="#F07020" stroke-width="1" opacity="0.25"/>
+  <line x1="60"  y1="800" x2="1080" y2="150" stroke="#F59E0B" stroke-width="0.7" opacity="0.18"/>
 
-  <!-- ── BANDA DIAGONAL SECUNDARIA (azul, cruzada) ── -->
-  <polygon points="0,200 280,0 420,0 0,350" fill="url(#slashBlue)" opacity="0.06"/>
-  <line x1="0" y1="200" x2="420" y2="0" stroke="url(#slashBlue)" stroke-width="1.5" opacity="0.4"/>
-  <line x1="0" y1="200" x2="420" y2="0" stroke="#0EA5E9" stroke-width="6" opacity="0.12" filter="url(#blur8)"/>
-  <line x1="0" y1="280" x2="340" y2="0" stroke="#0EA5E9" stroke-width="0.8" opacity="0.2"/>
+  <!-- ══ ACENTO AZUL (arriba izquierda) ══ -->
+  <polygon points="0,180 300,0 400,0 0,310" fill="url(#blueAccent)" opacity="0.05"/>
+  <line x1="0" y1="180" x2="400" y2="0" stroke="#0EA5E9" stroke-width="1.5" opacity="0.38"/>
+  <line x1="0" y1="180" x2="400" y2="0" stroke="#0EA5E9" stroke-width="7"   opacity="0.1" filter="url(#blur6)"/>
 
-  <!-- ── DIAMANTE GRANDE (arriba derecha) ── -->
-  <polygon points="1060,10 1195,155 1060,300 925,155" fill="none" stroke="#F07020" stroke-width="2" opacity="0.35"/>
-  <polygon points="1060,10 1195,155 1060,300 925,155" fill="#F07020" opacity="0.04" filter="url(#blur20)"/>
-  <polygon points="1060,45 1165,155 1060,265 955,155" fill="none" stroke="#F07020" stroke-width="1" opacity="0.2"/>
-  <polygon points="1060,85 1135,155 1060,225 985,155" fill="none" stroke="#F59E0B" stroke-width="0.8" opacity="0.15"/>
+  <!-- ══ HEXÁGONOS ══ -->
+  <polygon points="800,60 830,43 860,60 860,94 830,111 800,94"   fill="none" stroke="#F07020" stroke-width="1.2" opacity="0.22"/>
+  <polygon points="860,60 890,43 920,60 920,94 890,111 860,94"   fill="none" stroke="#F07020" stroke-width="1.2" opacity="0.18"/>
+  <polygon points="920,60 950,43 980,60 980,94 950,111 920,94"   fill="none" stroke="#F07020" stroke-width="1"   opacity="0.13"/>
+  <polygon points="830,111 860,94 890,111 890,145 860,162 830,145" fill="none" stroke="#F07020" stroke-width="1"   opacity="0.14"/>
+  <polygon points="890,111 920,94 950,111 950,145 920,162 890,145" fill="none" stroke="#F07020" stroke-width="0.8" opacity="0.1"/>
+  <polygon points="800,162 830,145 860,162 860,196 830,213 800,196" fill="none" stroke="#F07020" stroke-width="0.8" opacity="0.09"/>
 
-  <!-- ── TRIÁNGULO (abajo izquierda, azul) ── -->
-  <polygon points="0,480 320,800 0,800" fill="none" stroke="#0EA5E9" stroke-width="1.8" opacity="0.3"/>
-  <polygon points="0,480 320,800 0,800" fill="url(#slashBlue)" opacity="0.05"/>
-  <polygon points="0,560 220,800 0,800" fill="none" stroke="#0EA5E9" stroke-width="0.8" opacity="0.15"/>
+  <!-- ══ PUNTOS DECORATIVOS ══ -->
+  <circle cx="490" cy="640" r="3"   fill="#F07020" opacity="0.32"/>
+  <circle cx="518" cy="640" r="3"   fill="#F07020" opacity="0.24"/>
+  <circle cx="546" cy="640" r="3"   fill="#F07020" opacity="0.16"/>
+  <circle cx="574" cy="640" r="3"   fill="#F07020" opacity="0.1"/>
+  <circle cx="490" cy="668" r="3"   fill="#F07020" opacity="0.22"/>
+  <circle cx="518" cy="668" r="3"   fill="#F07020" opacity="0.15"/>
+  <circle cx="546" cy="668" r="3"   fill="#F07020" opacity="0.09"/>
+  <circle cx="490" cy="696" r="3"   fill="#F07020" opacity="0.14"/>
+  <circle cx="518" cy="696" r="3"   fill="#F07020" opacity="0.09"/>
+  <circle cx="55"  cy="360" r="2.5" fill="#0EA5E9" opacity="0.28"/>
+  <circle cx="83"  cy="360" r="2.5" fill="#0EA5E9" opacity="0.2"/>
+  <circle cx="111" cy="360" r="2.5" fill="#0EA5E9" opacity="0.13"/>
+  <circle cx="55"  cy="388" r="2.5" fill="#0EA5E9" opacity="0.2"/>
+  <circle cx="83"  cy="388" r="2.5" fill="#0EA5E9" opacity="0.13"/>
+  <circle cx="55"  cy="416" r="2.5" fill="#0EA5E9" opacity="0.13"/>
 
-  <!-- ── HEXÁGONOS (textura zona central-derecha) ── -->
-  <polygon points="820,90 848,74 876,90 876,122 848,138 820,122"  fill="none" stroke="#F07020" stroke-width="1.2" opacity="0.22"/>
-  <polygon points="876,90 904,74 932,90 932,122 904,138 876,122"  fill="none" stroke="#F07020" stroke-width="1.2" opacity="0.18"/>
-  <polygon points="932,90 960,74 988,90 988,122 960,138 932,122"  fill="none" stroke="#F07020" stroke-width="1.2" opacity="0.14"/>
-  <polygon points="848,138 876,122 904,138 904,170 876,186 848,170" fill="none" stroke="#F07020" stroke-width="1" opacity="0.15"/>
-  <polygon points="904,138 932,122 960,138 960,170 932,186 904,170" fill="none" stroke="#F07020" stroke-width="1" opacity="0.12"/>
-  <polygon points="820,186 848,170 876,186 876,218 848,234 820,218" fill="none" stroke="#F07020" stroke-width="0.8" opacity="0.1"/>
-  <polygon points="876,186 904,170 932,186 932,218 904,234 876,218" fill="none" stroke="#F07020" stroke-width="0.8" opacity="0.08"/>
+  <!-- ══ DIAMANTE PEQUEÑO ACENTO ══ -->
+  <rect x="550" y="310" width="70" height="70" fill="none" stroke="#F07020" stroke-width="1" opacity="0.2" transform="rotate(45 585 345)"/>
+  <rect x="562" y="322" width="46" height="46" fill="none" stroke="#F59E0B" stroke-width="0.6" opacity="0.12" transform="rotate(45 585 345)"/>
 
-  <!-- ── LÍNEAS DE VELOCIDAD ── -->
-  <line x1="-20" y1="720" x2="380" y2="420" stroke="#F07020" stroke-width="0.8" opacity="0.15"/>
-  <line x1="-20" y1="680" x2="320" y2="410" stroke="#F07020" stroke-width="0.5" opacity="0.1"/>
-  <line x1="30"  y1="760" x2="480" y2="440" stroke="#F07020" stroke-width="0.5" opacity="0.08"/>
-  <line x1="600" y1="800" x2="1200" y2="450" stroke="#F07020" stroke-width="0.8" opacity="0.13"/>
-  <line x1="680" y1="800" x2="1200" y2="520" stroke="#F07020" stroke-width="0.5" opacity="0.09"/>
+  <!-- ══════════════════════════════════════════════ -->
+  <!--               B A L Ó N                        -->
+  <!-- ══════════════════════════════════════════════ -->
+  <!-- Halo exterior -->
+  <circle cx="960" cy="195" r="280" fill="url(#ballHalo)" filter="url(#blur30)"/>
+  <!-- Sombra proyectada -->
+  <ellipse cx="990" cy="395" rx="155" ry="28" fill="#000" opacity="0.45" filter="url(#blur16)"/>
+  <!-- Bola -->
+  <circle cx="960" cy="200" r="165" fill="url(#ballFill)"/>
+  <!-- Costura vertical izquierda -->
+  <path d="M 960 35 Q 1020 120 1020 200 Q 1020 280 960 365" fill="none" stroke="#3D1200" stroke-width="3.5" opacity="0.75"/>
+  <!-- Costura vertical derecha -->
+  <path d="M 960 35 Q 900 120 900 200 Q 900 280 960 365" fill="none" stroke="#3D1200" stroke-width="3.5" opacity="0.75"/>
+  <!-- Costura horizontal superior -->
+  <path d="M 795 200 Q 880 148 960 143 Q 1040 148 1125 200" fill="none" stroke="#3D1200" stroke-width="3.5" opacity="0.75"/>
+  <!-- Costura horizontal inferior -->
+  <path d="M 795 200 Q 880 252 960 257 Q 1040 252 1125 200" fill="none" stroke="#3D1200" stroke-width="3.5" opacity="0.75"/>
+  <!-- Brillo principal -->
+  <ellipse cx="900" cy="135" rx="52" ry="32" fill="white" opacity="0.18" transform="rotate(-25 900 135)"/>
+  <!-- Brillo secundario pequeño -->
+  <ellipse cx="875" cy="120" rx="18" ry="11" fill="white" opacity="0.22" transform="rotate(-25 875 120)"/>
 
-  <!-- ── CURVAS DE BALÓN (abstracción, derecha) ── -->
-  <path d="M 1100 0 Q 1160 180 1100 360"  fill="none" stroke="#F07020" stroke-width="2.5" opacity="0.3"/>
-  <path d="M 1200 60 Q 1110 200 1200 340" fill="none" stroke="#F07020" stroke-width="2" opacity="0.22"/>
-  <path d="M 880 190 Q 1050 140 1200 190" fill="none" stroke="#F07020" stroke-width="2" opacity="0.28"/>
-  <path d="M 880 190 Q 1050 240 1200 190" fill="none" stroke="#F07020" stroke-width="2" opacity="0.28"/>
+  <!-- ══════════════════════════════════════════════ -->
+  <!--             S I L B A T O                      -->
+  <!-- ══════════════════════════════════════════════ -->
+  <g transform="translate(230, 590) rotate(-32)">
+    <!-- Cordón/lanyard -->
+    <path d="M -85 0 Q -100 -30 -80 -50" fill="none" stroke="#D4AF37" stroke-width="3" stroke-linecap="round" opacity="0.8"/>
+    <!-- Anilla -->
+    <circle cx="-85" cy="0" r="11" fill="none" stroke="url(#whistleGold)" stroke-width="3.5"/>
+    <circle cx="-85" cy="0" r="6"  fill="url(#whistleGold)" opacity="0.4"/>
+    <!-- Cuerpo principal (cámara del silbato) -->
+    <rect x="-78" y="-22" width="108" height="44" rx="22" fill="url(#whistleGoldH)"/>
+    <!-- Sombra interna cuerpo -->
+    <rect x="-78" y="4" width="108" height="18" rx="0" fill="#8B6914" opacity="0.25" clip-path="inset(0 0 0 0 round 0 0 22px 22px)"/>
+    <!-- Boquilla -->
+    <rect x="30" y="-13" width="65" height="26" rx="7" fill="url(#whistleGold)"/>
+    <rect x="30" y="4"  width="65" height="9" rx="0" fill="#8B6914" opacity="0.2"/>
+    <!-- Cámara del pito (bola) — semiesfera encima -->
+    <ellipse cx="-18" cy="-22" rx="22" ry="14" fill="url(#whistleGold)"/>
+    <ellipse cx="-18" cy="-22" rx="22" ry="14" fill="none" stroke="#8B6914" stroke-width="1.5" opacity="0.5"/>
+    <!-- Agujero del sonido -->
+    <ellipse cx="10" cy="0" r="7" ry="8" fill="#5C3D00" opacity="0.6"/>
+    <ellipse cx="28" cy="0" r="5" ry="7" fill="#5C3D00" opacity="0.5"/>
+    <!-- Brillo cuerpo -->
+    <rect x="-70" y="-18" width="88" height="9" rx="5" fill="white" opacity="0.22"/>
+    <!-- Brillo boquilla -->
+    <rect x="34" y="-9"  width="48" height="6"  rx="3" fill="white" opacity="0.2"/>
+  </g>
+  <!-- Halo dorado detrás del silbato -->
+  <circle cx="250" cy="575" r="90" fill="#D4AF37" opacity="0.06" filter="url(#blur30)"/>
 
-  <!-- ── PUNTOS EN CUADRÍCULA (zona media) ── -->
-  <circle cx="520" cy="660" r="3" fill="#F07020" opacity="0.35"/>
-  <circle cx="548" cy="660" r="3" fill="#F07020" opacity="0.26"/>
-  <circle cx="576" cy="660" r="3" fill="#F07020" opacity="0.18"/>
-  <circle cx="604" cy="660" r="3" fill="#F07020" opacity="0.12"/>
-  <circle cx="632" cy="660" r="3" fill="#F07020" opacity="0.07"/>
-  <circle cx="520" cy="688" r="3" fill="#F07020" opacity="0.26"/>
-  <circle cx="548" cy="688" r="3" fill="#F07020" opacity="0.18"/>
-  <circle cx="576" cy="688" r="3" fill="#F07020" opacity="0.12"/>
-  <circle cx="604" cy="688" r="3" fill="#F07020" opacity="0.07"/>
-  <circle cx="520" cy="716" r="3" fill="#F07020" opacity="0.18"/>
-  <circle cx="548" cy="716" r="3" fill="#F07020" opacity="0.12"/>
-  <circle cx="576" cy="716" r="3" fill="#F07020" opacity="0.07"/>
-
-  <!-- Puntos azules (arriba izquierda) -->
-  <circle cx="60"  cy="380" r="2.5" fill="#0EA5E9" opacity="0.3"/>
-  <circle cx="88"  cy="380" r="2.5" fill="#0EA5E9" opacity="0.22"/>
-  <circle cx="116" cy="380" r="2.5" fill="#0EA5E9" opacity="0.15"/>
-  <circle cx="60"  cy="408" r="2.5" fill="#0EA5E9" opacity="0.22"/>
-  <circle cx="88"  cy="408" r="2.5" fill="#0EA5E9" opacity="0.15"/>
-  <circle cx="60"  cy="436" r="2.5" fill="#0EA5E9" opacity="0.15"/>
-
-  <!-- ── RECTÁNGULO ROTADO (acento central) ── -->
-  <rect x="580" y="340" width="80" height="80" fill="none" stroke="#F07020" stroke-width="1" opacity="0.18" transform="rotate(45 620 380)"/>
-  <rect x="592" y="352" width="56" height="56" fill="none" stroke="#F59E0B" stroke-width="0.6" opacity="0.1" transform="rotate(45 620 380)"/>
-
-  <!-- ── LÍNEA HORIZONTAL DIVISORA ── -->
-  <line x1="0" y1="420" x2="1200" y2="420" stroke="#F07020" stroke-width="0.5" opacity="0.07"/>
-
-  <!-- ── FUNDIDOS FINALES ── -->
+  <!-- ══ FUNDIDOS ══ -->
   <rect width="1200" height="800" fill="url(#fadeTop)"/>
   <rect width="1200" height="800" fill="url(#fadeBottom)"/>
 </svg>
