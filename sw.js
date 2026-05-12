@@ -1,5 +1,5 @@
 // Club del Árbitro CBiAB — Service Worker
-const CACHE = 'clubarbitro-v7';
+const CACHE = 'clubarbitro-v8';
 const ASSETS = [
   '/',
   '/index.html',
@@ -9,7 +9,8 @@ const ASSETS = [
   '/data-oficiales.js',
   '/proteccion.js',
   '/logo.png',
-  '/manifest.json'
+  '/manifest.json',
+  '/hero-bg.svg'
 ];
 
 // Instalar: guarda los archivos estáticos en caché
