@@ -65,7 +65,7 @@ body {
 /* ── HOME ────────────────────────────────── */
 .hero {
   min-height: 100vh;
-  background: var(--navy) url('hero-bg.svg') center top / cover no-repeat;
+  background: #04080F url('hero-bg.svg') center center / cover no-repeat;
   display: flex; flex-direction: column; align-items: center; justify-content: center;
   padding: 48px 24px;
   position: relative; overflow: hidden;
