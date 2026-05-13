@@ -211,7 +211,7 @@ async function doRegister() {
 
   if (!nombre || !user || !pass) { showError(errEl, 'Rellena todos los campos.'); return; }
   if (pass.length < 6)           { showError(errEl, 'La contraseña debe tener al menos 6 caracteres.'); return; }
-  if (user === ADMIN_USER)       { showError(errEl, 'Ese nombre de usuario no está disponible.'); return; }
+  if (user === ADMIN_USER_ARBITROS || user === ADMIN_USER_OFICIALES) { showError(errEl, 'Ese nombre de usuario no está disponible.'); return; }
 
   const consentEl = document.getElementById('reg-consent');
   if (!consentEl || !consentEl.checked) {
